@@ -35,7 +35,7 @@ export default function Dashboard() {
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
           {dashboard.map((value, index) => (
-            <Grid item xs={value.sx}>
+            <Grid item xs>
               <Item>
                 <Stack
                   spacing={3}
