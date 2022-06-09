@@ -22,63 +22,19 @@ import { visuallyHidden } from "@mui/utils";
 import Chip from "@mui/material/Chip";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { Button } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 
-function createData(name, calories, fat, carbs, status) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    status,
-  };
-}
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
-const rows = [
-  createData("Water Resources", "Geography", "(861) 985-9554", 67, "Active"),
-  createData("Electric Charges and Fields", "Physics", "(888) 691-3058", 51, "Active"),
-  createData(
-    "Electrostatic Potential and Capacitance",
-    "Physics",
-    "(689) 479-1288",
-    24,
-    "Inactive"
-  ),
-  createData("The Solid State", "Chemistry", "(243) 969-8362", 24, "Active"),
-  createData("Electrochemistry", "Chemistry", "(725) 818-6240", 49, "Inactive"),
-  createData("History", "343", "(421) 445-6879", 87, "Inactive"),
-  createData("Ice cream sandwich", "32", "(657) 993-8829", 37, "Active"),
-  createData(
-    "The Rise of nationalism in Europe",
-    "History",
-    "(212) 359-0468",
-    94,
-    "Active"
-  ),
-  createData(
-    "The Age of Industrialisation",
-    "History",
-    "(663) 489-8708",
-    65,
-    "Inactive"
-  ),
-  createData(
-    "Resources and Development",
-    "Geography",
-    "(225) 875-6704",
-    98,
-    "Active"
-  ),
-  createData(
-    "My Mother at Sixty-Six",
-    "English",
-    "(552) 681-9293",
-    81,
-    "Active"
-  ),
-  createData("Getting Started with Python", "Computer Science", "(239) 507-3946", 9, "Inactive"),
-  createData("Arithmetic Progressions", "Mathematics", "(416) 421-8816", 63, "Active"),
-];
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -205,87 +161,8 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
-
-  return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Button
-          sx={{
-            flexGrow: 1,
-          }}
-        >
-          New Chapter
-        </Button>
-      )}
-
-      {/* Edit */}
-      {numSelected === 1 ? (
-        <Tooltip title="View">
-          <IconButton>
-            <RemoveRedEyeIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        ""
-      )}
-
-      {/* View */}
-      {numSelected === 1 ? (
-        <Tooltip title="Edit">
-          <IconButton>
-            <ModeEditIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        ""
-      )}
-
-      {/* Delte */}
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 export default function Topics() {
+  const [rows, setData] = React.useState([]);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
@@ -342,6 +219,107 @@ export default function Topics() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
+  // Dilog
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [grade, setGrade] = React.useState("");
+  const handleChangeGrade = (event) => {
+    setGrade(event.target.value);
+  };
+
+  const [subject, setSubject] = React.useState("");
+  const handleChangeSubject = (event) => {
+    setSubject(event.target.value);
+  };
+
+  const [chapter, setChapter] = React.useState("");
+  const handleChangeChapter = (event) => {
+    setChapter(event.target.value);
+  };
+
+  //Fetch Subject
+  const [subjects, setSubjects] = React.useState([]);
+  async function fetchSubjects() {
+    const response = await fetch("http://localhost:5000/api/subject");
+    const json = await response.json();
+    setSubjects(json);
+  } //Fetch Subject
+
+  //Fetch Grade
+  const [grades, setGrades] = React.useState([]);
+  async function fetchGrades() {
+    const response = await fetch("http://localhost:5000/api/grade");
+    const json = await response.json();
+    setGrades(json);
+  } //Fetch Grade
+
+  //Fetch Chapter
+  const [chapters, setChapters] = React.useState([]);
+  async function fetchChapters() {
+    const response = await fetch("http://localhost:5000/api/chapter");
+    const json = await response.json();
+    setChapters(json);
+  } //Fetch Chapter
+
+  React.useEffect(() => {
+    fetchChapters();
+    fetchGrades();
+    fetchSubjects();
+  }, []);
+
+  const [name, setName] = React.useState("");
+
+  //Post Topic
+  async function createChapter() {
+    const response = await fetch("http://localhost:5000/api/topic", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+        grade: grade,
+        subject: subject,
+        chapter: chapter,
+      }),
+    });
+    if (response.ok) {
+      alert("Topic Created");
+      fetchChapters();
+    }
+  }
+
+  //Delete Topic by id
+  async function deleteTopic(id) {
+    const response = await fetch(`http://localhost:5000/api/topic/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      Alert.success("Topic Deleted");
+    }
+  }
+
+  //Fetch Data from API
+  async function fetchData() {
+    const response = await fetch("http://localhost:5000/api/topic");
+    const json = await response.json();
+    setData(json);
+  } //Fetch Data from API
+
+  React.useEffect(() => {
+    fetchData();
+  }, []);
+
+
   return (
     <Box
       sx={{
@@ -350,8 +328,198 @@ export default function Topics() {
         borderRadius: 3,
       }}
     >
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Subject</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s,
+          </DialogContentText>
+          <InputLabel
+            id="demo-simple-select-filled-label"
+            sx={{
+              mt: 3,
+            }}
+          >
+            Topic Name
+          </InputLabel>
+
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            type="text"
+            size="small"
+            fullWidth
+            variant="outlined"
+            hiddenLabel
+            onChange={(e) => setName(e.target.value)}
+          />
+
+          <InputLabel
+            id="demo-simple-select-filled-label"
+            sx={{
+              mt: 3,
+            }}
+          >
+            Subject
+          </InputLabel>
+
+          <Select
+            id="demo-simple-select"
+            size="small"
+            dense
+            sx={{
+              width: "100%",
+            }}
+            value={subject}
+            hiddenLabel
+            onChange={handleChangeSubject}
+          >
+            {subjects.map((subject) => (
+              <MenuItem value={subject.subject_name} key={subject._id}>
+                {subject.subject_name}
+              </MenuItem>
+            ))}
+          </Select>
+
+          <InputLabel
+            id="demo-simple-select-filled-label"
+            sx={{
+              mt: 3,
+            }}
+          >
+            Chapter
+          </InputLabel>
+
+          <Select
+            id="demo-simple-select"
+            size="small"
+            dense
+            sx={{
+              width: "100%",
+            }}
+            value={chapter}
+            hiddenLabel
+            onChange={handleChangeChapter}
+          >
+            {chapters.map((chapter) => (
+              <MenuItem value={chapter.name} key={chapter._id}>
+                {chapter.name}
+              </MenuItem>
+            ))}
+          </Select>
+
+          <InputLabel
+            id="demo-simple-select-filled-label"
+            sx={{
+              mt: 3,
+            }}
+          >
+            Grade
+          </InputLabel>
+
+          <Select
+            id="demo-simple-select"
+            size="small"
+            dense
+            sx={{
+              width: "100%",
+            }}
+            value={grade}
+            hiddenLabel
+            onChange={handleChangeGrade}
+          >
+            {grades.map((grade) => (
+              <MenuItem value={grade.grade_name} key={grade._id}>
+                {grade.grade_name}
+              </MenuItem>
+            ))}
+          </Select>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={createChapter}>Create</Button>
+        </DialogActions>
+      </Dialog>
+
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <Toolbar
+          sx={{
+            pl: { sm: 2 },
+            pr: { xs: 1, sm: 1 },
+            ...(selected.length > 0 && {
+              bgcolor: (theme) =>
+                alpha(
+                  theme.palette.primary.main,
+                  theme.palette.action.activatedOpacity
+                ),
+            }),
+          }}
+        >
+          {selected.length > 0 ? (
+            <Typography
+              sx={{ flex: "1 1 100%" }}
+              color="inherit"
+              variant="subtitle1"
+              component="div"
+            >
+              {selected.length} selected
+            </Typography>
+          ) : (
+            <>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={handleClickOpen}
+                sx={{
+                  width: "12%",
+                }}
+              >
+                New Topic
+              </Button>
+              <Typography sx={{ flex: "1 1 100%" }} />
+            </>
+          )}
+
+          {/* Edit */}
+          {selected.length === 1 ? (
+            <Tooltip title="View">
+              <IconButton>
+                <RemoveRedEyeIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            ""
+          )}
+
+          {/* View */}
+          {selected.length === 1 ? (
+            <Tooltip title="Edit">
+              <IconButton>
+                <ModeEditIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            ""
+          )}
+
+          {/* Delte */}
+          {selected.length > 0 ? (
+            <Tooltip title="Delete">
+              <IconButton>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title="Filter list">
+              <IconButton>
+                <FilterListIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Toolbar>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -372,17 +540,17 @@ export default function Topics() {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row._id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row._id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -402,24 +570,27 @@ export default function Topics() {
                       >
                         {row.name}
                       </TableCell>
-                      <TableCell align="start">{row.calories}</TableCell>
+                      <TableCell align="start">{row.subject}</TableCell>
                       <TableCell align="start">
                         <Chip label="Harsh" />
                         {/* <Chip label="Hindi" /> */}
                       </TableCell>
-                      <TableCell align="start">{row.carbs}</TableCell>
+                      <TableCell align="start">{row.chapter}</TableCell>
                       <TableCell align="start">
                         {/* Chip */}
                         <Chip
                           label={row.status}
-                          sx={{
-                            backgroundColor:
-                              row.status === "Active" ? "green" : "red",
-                            width: "100%",
-                            color: "white",
-                          }}
+                          color={row.status == "Active" ? "success" : "error"}
+                          variant="outlined"
+                          sx={{ width: 80 }}
                         />
                       </TableCell>
+                      <TableCell align="start">
+                        <IconButton onClick={() => deleteTopic(row._id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+
                     </TableRow>
                   );
                 })}

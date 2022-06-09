@@ -27,6 +27,7 @@ import QuizTwoToneIcon from "@mui/icons-material/QuizTwoTone";
 import CircleNotificationsTwoToneIcon from "@mui/icons-material/CircleNotificationsTwoTone";
 import SubscriptionsTwoToneIcon from "@mui/icons-material/SubscriptionsTwoTone";
 import PaymentTwoToneIcon from "@mui/icons-material/PaymentTwoTone";
+import GradeIcon from '@mui/icons-material/Grade';
 
 import {
   Link as RouterLink,
@@ -45,6 +46,8 @@ import QuizResults from "../pages/QuizResults";
 import Notifications from "../pages/Notifications";
 import Payment from "../pages/PaymentGateway";
 import ManageQAndA from "../pages/ManageQ&A";
+import Grade from "../pages/Grade";
+import Login from "../pages/Login";
 
 const drawerWidth = 250;
 
@@ -60,6 +63,12 @@ const datas = [
     text: "Manage Students",
     icon: <AccountCircleTwoToneIcon />,
     link: "/manage-students",
+  },
+  {
+    id: 22,
+    text: "Manage Grade",
+    icon: <GradeIcon />,
+    link: "/manage-grade",
   },
   {
     id: 3,
@@ -257,6 +266,7 @@ function ResponsiveDrawer(props) {
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="manage-students" element={<Students />} />
+          <Route path="manage-grade" element={<Grade />} />
           <Route path="manage-subjects" element={<Subject />} />
           <Route path="manage-subscription-plans" element={<Subscription />} />
           <Route path="manage-chapters" element={<Chapters />} />

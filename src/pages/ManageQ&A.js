@@ -220,13 +220,7 @@ const EnhancedTableToolbar = (props) => {
           {numSelected} selected
         </Typography>
       ) : (
-        <Button
-          sx={{
-            flexGrow: 1,
-          }}
-        >
-          Add Students
-        </Button>
+        ""
       )}
 
       {/* Edit */}
@@ -331,9 +325,106 @@ export default function ManageQAndA() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Box sx={{ width: "100%", boxShadow: "0px 0px 10px #00000029", borderRadius: 3 }}>
+    <Box
+      sx={{
+        width: "100%",
+        boxShadow: "0px 0px 10px #00000029",
+        borderRadius: 3,
+      }}
+    >
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <Toolbar
+          sx={{
+            pl: { sm: 2 },
+            pr: { xs: 1, sm: 1 },
+            ...(selected.length > 0 && {
+              bgcolor: (theme) =>
+                alpha(
+                  theme.palette.primary.main,
+                  theme.palette.action.activatedOpacity
+                ),
+            }),
+          }}
+        >
+          {selected.length > 0 ? (
+            <Typography
+              sx={{ flex: "1 1 100%" }}
+              color="inherit"
+              variant="subtitle1"
+              component="div"
+            >
+              {selected.length} selected
+            </Typography>
+          ) : (
+            <>
+              <Button
+                sx={{
+                  fontSize: 12,
+                  fontWeight: "bold",
+                  color: "black",
+                  bgcolor: (theme) =>
+                    alpha(
+                      theme.palette.primary.main,
+                      theme.palette.action.activatedOpacity
+                    ),
+                  borderRadius: 1,
+                  px: 2,
+                  py: 1,
+                  mr: 2,
+                  "&:hover": {
+                    bgcolor: (theme) =>
+                      alpha(
+                        theme.palette.primary.main,
+                        theme.palette.action.hoverOpacity
+                      ),
+                  },
+                }}
+                onClick={() => {
+                  setSelected([]);
+                }}
+              >
+                Create New
+              </Button>
+            </>
+          )}
+          <Typography sx={{ flexGrow: 1 }}/>
+          {/* Edit */}
+          {selected.length === 1 ? (
+            <Tooltip title="View">
+              <IconButton>
+                <RemoveRedEyeIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            ""
+          )}
+
+          {/* View */}
+          {selected.length === 1 ? (
+            <Tooltip title="Edit">
+              <IconButton>
+                <ModeEditIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            ""
+          )}
+
+          {/* Delte */}
+          {selected.length > 0 ? (
+            <Tooltip title="Delete">
+              <IconButton>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title="Filter list">
+              <IconButton>
+                <FilterListIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Toolbar>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
