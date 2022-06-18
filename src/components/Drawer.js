@@ -48,6 +48,7 @@ import Payment from "../pages/PaymentGateway";
 import ManageQAndA from "../pages/ManageQ&A";
 import Grade from "../pages/Grade";
 import Login from "../pages/Login";
+import CreateQuiz from "../pages/CreateQuiz";
 
 const drawerWidth = 250;
 
@@ -256,10 +257,10 @@ function ResponsiveDrawer(props) {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 2,
+          p: 1,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           height: "100%",
-          background: "#F4F7FE",
+          // background: "#F4F7FE",
         }}
       >
         <Toolbar />
@@ -275,6 +276,7 @@ function ResponsiveDrawer(props) {
           <Route path="manage-quiz-results" element={<QuizResults />} />
           <Route path="manage-notifications" element={<Notifications />} />
           <Route path="manage-payment-gateway" element={<Payment />} />
+          <Route path="quiz/create" element={<CreateQuiz />} />
         </Routes>
       </Box>
     </Box>

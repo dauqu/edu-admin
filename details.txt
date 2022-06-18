@@ -1,0 +1,65 @@
+<Item
+      sx={{
+        boxShadow: "0px 0px 10px #00000029",
+        // margin: "5rem 10rem",
+      }}
+    >
+      <Grid container spacing={2}>
+        <Grid item xs={2}>
+          <Item>
+            <Stack spacing={2} direction="row">
+              <IconButton aria-label="delete">
+                <AlarmIcon />
+              </IconButton>
+            </Stack>
+          </Item>
+        </Grid>
+        <Grid item xs={10}>
+          <Item>
+            <TextField
+              fullWidth
+              id="filled-multiline-flexible"
+              multiline
+              minRows={10}
+              rows={10}
+              hiddenLabel
+              style={{
+                backgroundColor: "#fff",
+                border: "1px solid #6CA46F",
+                borderRadius: 5,
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+            />
+          </Item>
+        </Grid>
+        {/* Bottom */}
+        <Grid container spacing={2}>
+          <Grid item xs={11}>
+            <Item>
+              <Stack spacing={2} direction="row">
+                {data().map((item) => (
+                  <Grid item xs>
+                    <Item
+                      sx={{
+                        width: "auto",
+                        height: 200,
+                        boxShadow: "0px 0px 10px #00000029",
+                      }}
+                    ></Item>
+                  </Grid>
+                ))}
+              </Stack>
+            </Item>
+          </Grid>
+          <Grid item xs={1}>
+            <Item>
+              <IconButton aria-label="delete" size="small">
+                <DeleteIcon />
+              </IconButton>
+            </Item>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Item>

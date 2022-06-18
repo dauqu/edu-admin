@@ -24,6 +24,7 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { Button } from "@mui/material";
 
+
 function createData(name, calories, fat, carbs, status) {
   return {
     name,
@@ -35,11 +36,11 @@ function createData(name, calories, fat, carbs, status) {
 }
 
 const rows = [
-  createData("Harsh Singh", "info@example.com", "(861) 985-9554", 67, "Active"),
+  createData("Harsh_Singh", "info@example.com", "(861) 985-9554", 67, "Active"),
   createData("Amanpreet", "info@example.com", "(888) 691-3058", 51, "Active"),
   createData("Ashish", "info@example.com", "(689) 479-1288", 24, "Inactive"),
   createData(
-    "Frozen yoghurt",
+    "Frozen_yoghurt",
     "info@example.com",
     "(243) 969-8362",
     24,
@@ -60,7 +61,7 @@ const rows = [
     37,
     "Active"
   ),
-  createData("Jelly Bean", "info@example.com", "(212) 359-0468", 94, "Active"),
+  createData("Jelly_Bean", "info@example.com", "(212) 359-0468", 94, "Active"),
   createData("KitKat", "info@example.com", "(663) 489-8708", 65, "Inactive"),
   createData("Lollipop", "info@example.com", "(225) 875-6704", 98, "Active"),
   createData("Marshmallow", "info@example.com", "(552) 681-9293", 81, "Active"),
@@ -328,7 +329,7 @@ export default function ManageQAndA() {
     <Box
       sx={{
         width: "100%",
-        boxShadow: "0px 0px 10px #00000029",
+        // boxShadow: "0px 0px 1px #00000029",
         borderRadius: 3,
       }}
     >
@@ -387,7 +388,7 @@ export default function ManageQAndA() {
               </Button>
             </>
           )}
-          <Typography sx={{ flexGrow: 1 }}/>
+          <Typography sx={{ flexGrow: 1 }} />
           {/* Edit */}
           {selected.length === 1 ? (
             <Tooltip title="View">
@@ -445,17 +446,17 @@ export default function ManageQAndA() {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">

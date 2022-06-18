@@ -24,6 +24,12 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { Button } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import {
+  Link as RouterLink,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 
 function CircularProgressWithLabel(props) {
   return (
@@ -65,7 +71,7 @@ const rows = [
     10,
     "info@example.com",
     "20/40 min",
-    "Pass",
+    "Pass"
   ),
   createData(
     "Question Answer Email Test",
@@ -278,76 +284,6 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
-
-  return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        }),
-      }}
-    >
-      {/* {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : ("")} */}
-
-      {/* Edit */}
-      {numSelected === 1 ? (
-        <Tooltip title="View">
-          <IconButton>
-            <RemoveRedEyeIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        ""
-      )}
-
-      {/* View */}
-      {numSelected === 1 ? (
-        <Tooltip title="Edit">
-          <IconButton>
-            <ModeEditIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        ""
-      )}
-
-      {/* Delte */}
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>{/* <FilterListIcon /> */}</IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 export default function QuizResults() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -416,7 +352,67 @@ export default function QuizResults() {
       }}
     >
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <Toolbar
+          sx={{
+            pl: { sm: 2 },
+            pr: { xs: 1, sm: 1 },
+            ...(selected > 0 && {
+              bgcolor: (theme) =>
+                alpha(
+                  theme.palette.primary.main,
+                  theme.palette.action.activatedOpacity
+                ),
+            }),
+          }}
+        >
+          {0 == 0 ? (
+            <Button
+              variant="contained"
+              size="small"
+              component={RouterLink}
+              to="/quiz/create"
+            >
+              Create
+            </Button>
+          ) : (
+            ""
+          )}
+
+          {/* Edit */}
+          {selected === 1 ? (
+            <Tooltip title="View">
+              <IconButton>
+                <RemoveRedEyeIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            ""
+          )}
+
+          {/* View */}
+          {selected === 1 ? (
+            <Tooltip title="Edit">
+              <IconButton>
+                <ModeEditIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            ""
+          )}
+
+          {/* Delte */}
+          {selected > 0 ? (
+            <Tooltip title="Delete">
+              <IconButton>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title="Filter list">
+              <IconButton>{/* <FilterListIcon /> */}</IconButton>
+            </Tooltip>
+          )}
+        </Toolbar>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
