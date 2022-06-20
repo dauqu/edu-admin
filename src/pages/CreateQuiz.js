@@ -28,6 +28,8 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function CreateQuiz() {
+  const [question, setQuestion] = React.useState("");
+
   const data = () => [
     {
       id: 1,
@@ -67,47 +69,51 @@ export default function CreateQuiz() {
       { id: answers.length + 1, answer: "", correct: false, color },
     ]);
   };
-  console.log(answers);
+
+  // console.log(answers);
 
   //Delete answer
   const deleteAnswer = (id) => {
     setAnswers(answers.filter((answer) => answer.id !== id));
   };
 
-  //Update answer
-  const updateAnswer = (id, answer) => {
+  //On change sent currect answer to the state
+  const updateAnswer = (e, id) => {
     setAnswers(
       answers.map((answer) => {
         if (answer.id === id) {
-          return { ...answer, answer };
+          answer.answer = e;
         }
         return answer;
       })
     );
-  };
-
-  //Set data to answers
-  const setData = (data) => {
-    setAnswers(data);
   };
 
   //On Click change background color to curect answer
   const changeColor = (id) => {
     setAnswers(
       answers.map((answer) => {
-        //Radio button
-        // if (answer.id === id) {
-        //   return { ...answer, crrect: true };
-        // }
-        // return answer;
-
-        //Checkbox
         if (answer.id === id) {
           return { ...answer, correct: !answer.correct };
         }
         return answer;
       })
     );
+  };
+
+  //Post Data to server using fech
+  const postData = () => {
+    console.log(answers);
+    fetch("http://localhost:5000/api/quiz", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question: question,
+        answers: answers,
+      }),
+    });
   };
 
   return (
@@ -129,7 +135,9 @@ export default function CreateQuiz() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Create Quiz
           </Typography>
-          <Button color="inherit">Save</Button>
+          <Button color="inherit" onClick={postData}>
+            Save
+          </Button>
         </Toolbar>
       </AppBar>
 
@@ -146,7 +154,7 @@ export default function CreateQuiz() {
         <Grid container spacing={2}>
           <Grid
             item
-            xs={1}
+            xs={0.5}
             sx={{
               minWidth: "100px",
             }}
@@ -240,7 +248,7 @@ export default function CreateQuiz() {
               </Stack>
             </Item>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs>
             <Item
               sx={{
                 backgroundColor: "#00000000",
@@ -252,6 +260,7 @@ export default function CreateQuiz() {
                 placeholder="Enter your question here..."
                 minRows={10}
                 rows={10}
+                onChange={(e) => setQuestion(e.target.value)}
                 hiddenLabel
                 style={{
                   borderRadius: 15,
@@ -284,7 +293,7 @@ export default function CreateQuiz() {
                 backgroundColor: "#00000000",
               }}
             >
-              <Stack spacing={3} direction="row">
+              <Stack spacing={1} direction="row">
                 {answers.map((item) => (
                   <Grid item xs>
                     <Item
@@ -340,7 +349,7 @@ export default function CreateQuiz() {
                             <IconButton
                               aria-label="delete"
                               size="small"
-                              onClick={() => deleteAnswer(item.id)}
+                              // onClick={() => deleteAnswer(item.id)}
                               sx={{
                                 width: 30,
                                 height: 30,
@@ -383,7 +392,10 @@ export default function CreateQuiz() {
                           multiline
                           rows={10}
                           placeholder="Type your answer here..."
-                          onChange={(e) => updateAnswer(e, item.id)}
+                          onChange={(e) =>
+                            updateAnswer(e.target.value, item.id)
+                          }
+                          value={item.answer}
                           sx={{
                             margin: 5,
                             width: "auto",
