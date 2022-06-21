@@ -319,8 +319,11 @@ export default function Students() {
   const [phone, setPhone] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  const [disabled, setDisabled] = React.useState(false);
+
   //Post new student
   const postStudent = async () => {
+    setDisabled(true);
     const res = await fetch("http://localhost:5000/api/register", {
       method: "POST",
       headers: {
@@ -336,6 +339,7 @@ export default function Students() {
     const data = await res.json();
     alert(data.message);
     getStudents();
+    setDisabled(false);
   };
 
   return (
@@ -400,8 +404,8 @@ export default function Students() {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={postStudent}>Create</Button>
+            <Button onClick={handleClose} variant="contained" size="small">Cancel</Button>
+            <Button onClick={postStudent} variant="contained" size="small" disabled={disabled}>Create</Button>
           </DialogActions>
         </Dialog>
 
@@ -434,28 +438,7 @@ export default function Students() {
             </Button>
           )}
           <Typography sx={{ flex: "1 1" }} />
-          {/* Edit */}
-          {/* {selected.length === 1 ? (
-            <Tooltip title="View">
-              <IconButton>
-                <RemoveRedEyeIcon />
-              </IconButton>
-            </Tooltip>
-          ) : (
-            ""
-          )} */}
-
-          {/* View */}
-          {/* {selected.length === 1 ? (
-            <Tooltip title="Edit">
-              <IconButton>
-                <ModeEditIcon />
-              </IconButton>
-            </Tooltip>
-          ) : (
-            ""
-          )} */}
-
+         
           {/* Delte */}
           {selected.length > 0 ? (
             <Tooltip title="Delete">

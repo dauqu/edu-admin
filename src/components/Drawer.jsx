@@ -27,7 +27,7 @@ import QuizTwoToneIcon from "@mui/icons-material/QuizTwoTone";
 import CircleNotificationsTwoToneIcon from "@mui/icons-material/CircleNotificationsTwoTone";
 import SubscriptionsTwoToneIcon from "@mui/icons-material/SubscriptionsTwoTone";
 import PaymentTwoToneIcon from "@mui/icons-material/PaymentTwoTone";
-import GradeIcon from '@mui/icons-material/Grade';
+import GradeIcon from "@mui/icons-material/Grade";
 
 import {
   Link as RouterLink,
@@ -42,13 +42,14 @@ import Subject from "../pages/Subjects";
 import Subscription from "../pages/Subscription";
 import Chapters from "../pages/Chapters";
 import Topics from "../pages/Topics";
-import QuizResults from "../pages/QuizResults";
+import QuizResults from "../pages/Quizz";
 import Notifications from "../pages/Notifications";
 import Payment from "../pages/PaymentGateway";
 import ManageQAndA from "../pages/ManageQ&A";
 import Grade from "../pages/Grade";
 import Login from "../pages/Login";
-import CreateQuiz from "../pages/CreateQuiz";
+import CreateQuiz from "../pages/CreateQuizz";
+import Quizzdata from "../pages/Quizzdata";
 
 const drawerWidth = 250;
 
@@ -97,9 +98,9 @@ const datas = [
   },
   {
     id: 7,
-    text: "Manage Quiz Results",
+    text: "Manage Quizz",
     icon: <QuizTwoToneIcon />,
-    link: "/manage-quiz-results",
+    link: "/quizz",
   },
   {
     id: 8,
@@ -129,8 +130,9 @@ function ResponsiveDrawer(props) {
     setMobileOpen(!mobileOpen);
   };
 
-
   const location = useLocation();
+
+  console.log(location.pathname);
 
   const drawer = (
     <div>
@@ -273,10 +275,12 @@ function ResponsiveDrawer(props) {
           <Route path="manage-chapters" element={<Chapters />} />
           <Route path="manage-topics" element={<Topics />} />
           <Route path="manage-q-and-a" element={<ManageQAndA />} />
-          <Route path="manage-quiz-results" element={<QuizResults />} />
+          <Route path="quizz" element={<QuizResults />}>
+            <Route path="create" element={<CreateQuiz />} />
+            <Route path="" element={<Quizzdata />} />
+          </Route>
           <Route path="manage-notifications" element={<Notifications />} />
           <Route path="manage-payment-gateway" element={<Payment />} />
-          <Route path="quiz/create" element={<CreateQuiz />} />
         </Routes>
       </Box>
     </Box>

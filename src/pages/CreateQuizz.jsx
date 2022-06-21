@@ -17,6 +17,12 @@ import DoneIcon from "@mui/icons-material/Done";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
+import {
+  Link as RouterLink,
+  Outlet,
+} from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -104,7 +110,7 @@ export default function CreateQuiz() {
   //Post Data to server using fech
   const postData = () => {
     console.log(answers);
-    fetch("http://localhost:5000/api/quiz", {
+    fetch("http://localhost:5000/api/quizz", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -115,6 +121,20 @@ export default function CreateQuiz() {
       }),
     });
   };
+
+  const [sdata, ssetdata] = React.useState([]);
+
+  const getData = () => {
+    fetch("https://jsonplaceholder.typicode.com/todos")
+      .then((res) => res.json())
+      .then((data) => {
+        ssetdata(data);
+      });
+  };
+
+  React.useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <Box sx={{}}>
@@ -131,7 +151,11 @@ export default function CreateQuiz() {
             edge="start"
             color="inherit"
             aria-label="menu"
-          ></IconButton>
+            component={RouterLink}
+            to="/quizz"
+          >
+            <ArrowBackIcon />
+          </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Create Quiz
           </Typography>

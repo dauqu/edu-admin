@@ -284,7 +284,7 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-export default function QuizResults() {
+export default function QuizzData() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
@@ -370,7 +370,7 @@ export default function QuizResults() {
               variant="contained"
               size="small"
               component={RouterLink}
-              to="/quiz/create"
+              to="/quizz/create"
             >
               Create
             </Button>
