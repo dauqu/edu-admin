@@ -20,144 +20,20 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import Chip from "@mui/material/Chip";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { Button } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
-import {
-  Link as RouterLink,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { AppBar, Button } from "@mui/material";
+import AddCircleOutlineTwoTone from "@mui/icons-material/AddCircleOutlineTwoTone";
+import { Link as RouterLink, Outlet, useNavigate } from "react-router-dom";
 
-function CircularProgressWithLabel(props) {
-  return (
-    <Box sx={{ position: "relative", display: "inline-flex" }}>
-      <CircularProgress variant="determinate" {...props} />
-      <Box
-        sx={{
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          position: "absolute",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Typography variant="caption" component="div" color="text.secondary">
-          {`${Math.round(props.value)}%`}
-        </Typography>
-      </Box>
-    </Box>
-  );
-}
-
-function createData(name, calories, fat, carbs, status) {
+function createData(name, calories, fat, carbs, protein) {
   return {
     name,
     calories,
     fat,
     carbs,
-    status,
+    protein,
   };
 }
 
-const rows = [
-  createData(
-    "Question Answer Email Test",
-    10,
-    "info@example.com",
-    "20/40 min",
-    "Pass"
-  ),
-  createData(
-    "Question Answer Email Test",
-    60,
-    "info@example.com",
-    "10/40 min",
-    "Pass"
-  ),
-  createData(
-    "Question Answer Email Test",
-    90,
-    "info@example.com",
-    "30/40 min",
-    "Pass"
-  ),
-  createData(
-    "Question Answer Email Test",
-    30,
-    "info@example.com",
-    "4/40 min",
-    "Fail"
-  ),
-  createData(
-    "Question Answer Email Test",
-    30,
-    "info@example.com",
-    "32/40 min",
-    "Pass"
-  ),
-  createData(
-    "Question Answer Email Test",
-    80,
-    "info@example.com",
-    "40/40 min",
-    "Pass"
-  ),
-  createData(
-    "Question Answer Email Test",
-    20,
-    "info@example.com",
-    "10/40 min",
-    "Fail"
-  ),
-  createData(
-    "Question Answer Email Test",
-    30,
-    "info@example.com",
-    "33/40 min",
-    "Fail"
-  ),
-  createData(
-    "Question Answer Email Test",
-    50,
-    "info@example.com",
-    "20/40 min",
-    "Pass"
-  ),
-  createData(
-    "Question Answer Email Test",
-    50,
-    "info@example.com",
-    "6/40 min",
-    "Pass"
-  ),
-  createData(
-    "Question Answer Email Test",
-    70,
-    "info@example.com",
-    "8/40 min",
-    "Fail"
-  ),
-  createData(
-    "Question Answer Email Test",
-    30,
-    "info@example.com",
-    "20/40 min",
-    "Fail"
-  ),
-  createData(
-    "Question Answer Email Test",
-    70,
-    "info@example.com",
-    "40/40 min",
-    "Pass"
-  ),
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -194,25 +70,25 @@ const headCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Quize Name",
+    label: "Quizz Name",
   },
   {
-    id: "calories",
+    id: "questions",
     numeric: true,
     disablePadding: false,
-    label: "Score",
+    label: "Questions",
   },
   {
-    id: "fat",
+    id: "creator",
     numeric: true,
     disablePadding: false,
-    label: "Email",
+    label: "Creator",
   },
   {
-    id: "carbs",
+    id: "date",
     numeric: true,
     disablePadding: false,
-    label: "Time Taken",
+    label: "Date",
   },
   {
     id: "status",
@@ -252,7 +128,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align="start"
+            align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -284,36 +160,42 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-export default function QuizzData() {
+export default function EnhancedTable() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const [progress, setProgress] = React.useState(20);
+  const [rows, setData] = React.useState([]);
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
+  async function fetchData() {
+    const res = await fetch("http://localhost:5000/api/quizz");
+    const data = await res.json();
+    setData(data);
+  }
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
+  React.useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function deleteData(selected) {
+    const res = await fetch(`http://localhost:5000/api/quizz/${selected}`, {
+      method: "DELETE",
+    });
+    if (res.status === 200) {
+      fetchData();
+      setSelected([])
     }
-    setSelected([]);
-  };
+  }
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, _id) => {
+    const selectedIndex = selected.indexOf(_id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, _id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -337,23 +219,24 @@ export default function QuizzData() {
     setPage(0);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        boxShadow: "0px 0px 10px #00000029",
-        borderRadius: 3,
-      }}
-    >
-      <Paper sx={{ width: "100%", mb: 2 }}>
+    <Box sx={{ width: "100%", boxShadow: 0 }}>
+      <AppBar
+        position="static"
+        sx={{
+          background: "#333",
+        }}
+      >
         <Toolbar
+          variant="dense"
           sx={{
+            width: "auto",
             pl: { sm: 2 },
             pr: { xs: 1, sm: 1 },
             ...(selected > 0 && {
@@ -365,85 +248,98 @@ export default function QuizzData() {
             }),
           }}
         >
-          {0 == 0 ? (
-            <Button
-              variant="contained"
-              size="small"
-              component={RouterLink}
-              to="/quizz/create"
-            >
-              Create
-            </Button>
-          ) : (
-            ""
-          )}
-
-          {/* Edit */}
-          {selected === 1 ? (
-            <Tooltip title="View">
-              <IconButton>
-                <RemoveRedEyeIcon />
-              </IconButton>
-            </Tooltip>
-          ) : (
-            ""
-          )}
-
-          {/* View */}
-          {selected === 1 ? (
-            <Tooltip title="Edit">
-              <IconButton>
-                <ModeEditIcon />
-              </IconButton>
-            </Tooltip>
-          ) : (
-            ""
-          )}
-
-          {/* Delte */}
           {selected > 0 ? (
+            <Typography
+              // sx={{ flex: "1 1 100%" }}
+              color="inherit"
+              variant="subtitle1"
+              component="div"
+            >
+              {selected} selected
+            </Typography>
+          ) : (
+            <Typography
+              // sx={{ flex: "1 1 100%" }}
+              variant="h6"
+              id="tableTitle"
+              component="div"
+            >
+              Quizz
+            </Typography>
+          )}
+
+          <Button
+            component={RouterLink}
+            to="./create"
+            variant="contained"
+            size="small"
+            sx={{
+              boxShadow: 0,
+              ml: 4,
+            }}
+          >
+            Create Quizz
+          </Button>
+
+          {selected.length === 1 ? (
+            <IconButton
+              component={RouterLink}
+              to={`./quizz-question/${selected}`}
+              sx={{
+                ml: 2,
+              }}
+            >
+              <AddCircleOutlineTwoTone
+                sx={{
+                  color: "#ffffff",
+                }}
+              />
+            </IconButton>
+          ) : (
+            ""
+          )}
+
+          <Typography sx={{ flex: "1" }}></Typography>
+
+          {selected.length === 1 ? (
             <Tooltip title="Delete">
-              <IconButton>
-                <DeleteIcon />
+              <IconButton onClick={(e) => deleteData(selected)}>
+                <DeleteIcon
+                  sx={{
+                    color: "#ffffff",
+                  }}
+                />
               </IconButton>
             </Tooltip>
           ) : (
-            <Tooltip title="Filter list">
-              <IconButton>{/* <FilterListIcon /> */}</IconButton>
-            </Tooltip>
+            ""
           )}
         </Toolbar>
+      </AppBar>
+      <Paper sx={{ width: "100%", boxShadow: 1 }}>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size="medium"
+            size={dense ? "small" : "medium"}
           >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
             <TableBody>
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row._id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row._id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -461,24 +357,23 @@ export default function QuizzData() {
                         scope="row"
                         padding="none"
                       >
-                        {row.name}
+                        {row.quizz_name}
                       </TableCell>
-                      <TableCell align="start">
-                        <CircularProgressWithLabel value={row.calories} />
+                      <TableCell align="right">
+                        {row.quizz_questions.length}
                       </TableCell>
-                      <TableCell align="start">
-                        <Chip label={row.fat} />
-                        {/* <Chip label="Hindi" /> */}
+                      <TableCell align="right">{row.quizz_creator}</TableCell>
+                      <TableCell align="right">
+                        {row.quiz_created_at.slice(0, 10)}
                       </TableCell>
-                      <TableCell align="start">{row.carbs}</TableCell>
-                      <TableCell align="start">
-                        {/* Chip */}
+                      <TableCell align="right">
                         <Chip
-                          label={row.status}
+                          label={row.quizz_status}
                           sx={{
                             backgroundColor:
-                              row.status === "Pass" ? "green" : "red",
-                            width: "100%",
+                              row.quizz_status === "Active" ? "green" : "red",
+                            width: "auto",
+                            minWidth: "40%",
                             color: "white",
                           }}
                         />
@@ -489,7 +384,7 @@ export default function QuizzData() {
               {emptyRows > 0 && (
                 <TableRow
                   style={{
-                    height: 53 * emptyRows,
+                    height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
                   <TableCell colSpan={6} />

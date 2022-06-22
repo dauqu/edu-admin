@@ -69,19 +69,19 @@ const headCells = [
     label: "Full Name",
   },
   {
-    id: "calories",
+    id: "email",
     numeric: true,
     disablePadding: false,
     label: "Email",
   },
   {
-    id: "fat",
+    id: "phone",
     numeric: true,
     disablePadding: false,
     label: "Phone",
   },
   {
-    id: "carbs",
+    id: "role",
     numeric: true,
     disablePadding: false,
     label: "Role",
@@ -106,7 +106,6 @@ function EnhancedTableHead(props) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
-  
 
   return (
     <TableHead>
@@ -237,7 +236,7 @@ export default function Students() {
   const [rows, setData] = React.useState([]);
 
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("email");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -292,8 +291,7 @@ export default function Students() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-
-      // Dilog
+  // Dilog
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -351,63 +349,72 @@ export default function Students() {
       }}
     >
       <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Grade</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s,
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Full Name"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={fullname}
-              onChange={(e) => setFullname(e.target.value)}
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Email Address"
-              type="email"
-              fullWidth
-              variant="standard"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Phone Number"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}                
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Password"
-              type="password"
-              fullWidth
-              variant="standard"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} variant="contained" size="small">Cancel</Button>
-            <Button onClick={postStudent} variant="contained" size="small" disabled={disabled}>Create</Button>
-          </DialogActions>
-        </Dialog>
+        <DialogTitle>Grade</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s,
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Full Name"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={fullname}
+            onChange={(e) => setFullname(e.target.value)}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="standard"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Phone Number"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Password"
+            type="password"
+            fullWidth
+            variant="standard"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} variant="contained" size="small">
+            Cancel
+          </Button>
+          <Button
+            onClick={postStudent}
+            variant="contained"
+            size="small"
+            disabled={disabled}
+          >
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Paper sx={{ width: "100%", mb: 2 }}>
         <Toolbar
@@ -438,7 +445,7 @@ export default function Students() {
             </Button>
           )}
           <Typography sx={{ flex: "1 1" }} />
-         
+
           {/* Delte */}
           {selected.length > 0 ? (
             <Tooltip title="Delete">

@@ -61,8 +61,8 @@ export default function Login() {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        'Access-Control-Allow-Origin': '*'
-      }, 
+        "Access-Control-Allow-Origin": "*",
+      },
       body: JSON.stringify({
         email: email,
         password: password,
@@ -99,17 +99,20 @@ export default function Login() {
           {message}
         </Alert>
       </Snackbar>
+      {/* Mian Box */}
       <Box
         sx={{
           maxWidth: 450,
           minWidth: 350,
-          height: "80vh",
+          height: "100vh",
           ml: "50%",
           transform: "translateX(-50%)",
           padding: "1rem",
           boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.5)",
           borderRadius: "5px",
-          mt: "2%",
+          // mt: "2%",
+          background: "#fff",
+          pt: "4%",
         }}
       >
         <ThemeProvider theme={theme}>
@@ -136,6 +139,8 @@ export default function Login() {
                 sx={{ mt: 1 }}
               >
                 <TextField
+                  focused
+                  variant="filled"
                   margin="normal"
                   required
                   fullWidth
@@ -149,6 +154,8 @@ export default function Login() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <TextField
+                  focused
+                  variant="filled"
                   margin="normal"
                   required
                   fullWidth

@@ -50,6 +50,7 @@ import Grade from "../pages/Grade";
 import Login from "../pages/Login";
 import CreateQuiz from "../pages/CreateQuizz";
 import Quizzdata from "../pages/Quizzdata";
+import QuizzQuestion from "../pages/Quizz_Question";
 
 const drawerWidth = 250;
 
@@ -137,10 +138,20 @@ function ResponsiveDrawer(props) {
   const drawer = (
     <div>
       <Toolbar
+        variant="dense"
         sx={{
           height: "10px",
+          background: "#333",
         }}
-      ></Toolbar>
+      >
+        <Typography
+          sx={{
+            color: "white",
+          }}
+        >
+          Hello World
+        </Typography>
+      </Toolbar>
       <Divider />
       <List>
         {datas.map((value) => (
@@ -182,9 +193,10 @@ function ResponsiveDrawer(props) {
         }}
       >
         <Toolbar
+          variant="dense"
           sx={{
-            backgroundColor: "#ffffff",
-            borderBottom: "1px solid #e0e0e0",
+            backgroundColor: "#333",
+            borderBottom: "1px solid #ffffff",
           }}
         >
           <IconButton
@@ -200,7 +212,7 @@ function ResponsiveDrawer(props) {
             variant="h6"
             noWrap
             component="div"
-            sx={{ color: "#333" }}
+            sx={{ color: "#fff" }}
           >
             Dashboard
           </Typography>
@@ -209,6 +221,7 @@ function ResponsiveDrawer(props) {
 
           <IconButton>
             <Avatar
+              sx={{ width: 32, height: 32 }}
               alt="Remy Sharp"
               src="https://i.pinimg.com/736x/f3/53/55/f353553805d7924c68bec227ed7d1af8.jpg"
             />
@@ -235,6 +248,7 @@ function ResponsiveDrawer(props) {
               boxSizing: "border-box",
               width: drawerWidth,
             },
+            backgroundColor: "#461A42",
           }}
         >
           {drawer}
@@ -278,6 +292,7 @@ function ResponsiveDrawer(props) {
           <Route path="quizz" element={<QuizResults />}>
             <Route path="create" element={<CreateQuiz />} />
             <Route path="" element={<Quizzdata />} />
+            <Route path="quizz-question/:id" element={<QuizzQuestion />} />
           </Route>
           <Route path="manage-notifications" element={<Notifications />} />
           <Route path="manage-payment-gateway" element={<Payment />} />

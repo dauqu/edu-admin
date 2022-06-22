@@ -20,7 +20,9 @@ function App() {
   console.log(data.message);
 
   return (
-    <div className="App">
+    <div className="App" style={{
+      // background: "#461A42"
+    }}>
       {data.message != "Unauthorized" ? <Login /> : <ResponsiveDrawer />}
     </div>
   );

@@ -189,7 +189,7 @@ export default function Grade() {
         grade_name: grade,
       }),
     });
-    if (res.ok) {
+    if (res.status === 200) {
       fetchData();
     }
   }
@@ -258,7 +258,7 @@ export default function Grade() {
     const res = await fetch(`http://localhost:5000/api/grade/${id}`, {
       method: "DELETE",
     });
-    if (res.ok) {
+    if (res.status === 200) {
       fetchData();
     }
   }

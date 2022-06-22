@@ -161,7 +161,7 @@ EnhancedTableHead.propTypes = {
 
 export default function Chapters() {
   const [rows, setChapters] = React.useState([]);
-  
+
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
@@ -265,7 +265,7 @@ export default function Chapters() {
 
   //Create Chapter Post Request
   async function createChapter() {
-    const response = await fetch("http://localhost:5000/api/chapter", {
+    const res = await fetch("http://localhost:5000/api/chapter", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -276,8 +276,11 @@ export default function Chapters() {
         subject: subject,
       }),
     });
-    const json = await response.json();
-    console.log(json);
+    // const json = await res.json();
+    // console.log(json);
+    if (res.status === 200) {
+      fetchChapters();
+    }
   }
 
   //Get Chapters
@@ -293,13 +296,13 @@ export default function Chapters() {
 
   //Delete Chapter
   async function deleteChapter(id) {
-    const response = await fetch(`http://localhost:5000/api/chapter/${id}`, {
+    const res = await fetch(`http://localhost:5000/api/chapter/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
     });
-    if (response.ok) {
+    if (res.status === 200) {
       fetchChapters();
     }
   }

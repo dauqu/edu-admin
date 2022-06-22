@@ -239,7 +239,7 @@ export default function Subjects() {
 
   const [subject, setSubjects] = React.useState([]);
   //Post Data
-  async function postData(data) {
+  async function postData() {
     const res = await fetch("http://localhost:5000/api/subject", {
       method: "POST",
       headers: {
@@ -249,7 +249,7 @@ export default function Subjects() {
         subject_name: subject,
       }),
     });
-    if (res.ok) {
+    if (res.status === 200) {
       fetchData();
     }
   }
@@ -259,7 +259,7 @@ export default function Subjects() {
     const res = await fetch(`http://localhost:5000/api/subject/${id}`, {
       method: "DELETE",
     });
-    if (res.ok) {
+    if (res.status === 200) {
       fetchData();
     }
   }
@@ -433,9 +433,7 @@ export default function Subjects() {
                         />
                       </TableCell>
                       <TableCell align="start">
-                        <IconButton
-                          onClick={() => deleteData(row._id)}
-                        >
+                        <IconButton onClick={() => deleteData(row._id)}>
                           <DeleteIcon />
                         </IconButton>
                       </TableCell>

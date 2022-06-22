@@ -289,7 +289,7 @@ export default function Topics() {
         chapter: chapter,
       }),
     });
-    if (response.ok) {
+    if (response.status === 200) {
       alert("Topic Created");
       fetchChapters();
     }
@@ -303,7 +303,7 @@ export default function Topics() {
         "Content-Type": "application/json",
       },
     });
-    if (response.ok) {
+    if (response.status === 200) {
       Alert.success("Topic Deleted");
     }
   }
